@@ -18,27 +18,25 @@ export class AuthService {
     // generate password hash
     const hash = await argon.hash(dto.password);
 
-    try {
-      // save new user in db
-      const user = await this.prisma.user.create({
+    const user = await this.prisma.user
+      .create({
         data: {
           email: dto.email,
           hash,
         },
+      })
+      .catch((error) => {
+        if (error instanceof PrismaClientKnownRequestError) {
+          // duplicate key error
+          if (error.code === 'P2002') {
+            throw new ForbiddenException('Email already exists');
+          }
+        }
+
+        throw error;
       });
 
-      // return saved user
-      return this.signToken(user.id, user.email);
-    } catch (error) {
-      if (error instanceof PrismaClientKnownRequestError) {
-        // duplicate key error
-        if (error.code === 'P2002') {
-          throw new ForbiddenException('Email already exists');
-        }
-      }
-
-      throw error;
-    }
+    return this.signToken(user.id, user.email);
   }
 
   async signin(dto: AuthDto) {
