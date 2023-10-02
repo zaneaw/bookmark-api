@@ -27,7 +27,8 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "pnpm db:test:restart && dotenv -e .env.test -- jest --watch --config ./test/jest-e2e.json"
+    "test:e2e": "pnpm db:test:restart && dotenv -e .env.test -- jest --watch --config ./test/jest-e2e.json",
+    "test:int": "pnpm db:test:restart && dotenv -e .env.test -- jest -i --no-cache --watch --config jest-int.json"
   },
   "dependencies": {
     "@nestjs/common": "^10.2.6",
