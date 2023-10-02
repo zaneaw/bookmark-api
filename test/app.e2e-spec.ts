@@ -138,14 +138,96 @@ describe('App e2e', () => {
   });
 
   describe('Bookmarks', () => {
-    describe('Create bookmark', () => {});
+    describe('Get empty bookmarks', () => {
+      it('should get empty bookmarks', () => {
+        return pactum
+          .spec()
+          .get('/bookmarks')
+          .withHeaders({ Authorization: 'Bearer $S{userAccessToken}' })
+          .expectStatus(200)
+          .expectBody([]);
+      });
+    });
 
-    describe('Get bookmarks', () => {});
+    describe('Create bookmark', () => {
+      it('should create a bookmark', () => {
+        const dto = {
+          title: 'First Bookmark',
+          link: 'https://www.youtube.com/watch?v=d6WC5n9G_sM',
+        };
 
-    describe('Get bookmarks by id', () => {});
+        return pactum
+          .spec()
+          .post('/bookmarks')
+          .withHeaders({ Authorization: 'Bearer $S{userAccessToken}' })
+          .withBody(dto)
+          .expectStatus(201)
+          .stores('bookmarkId', 'id')
+          .expectBodyContains(dto.title)
+          .expectBodyContains(dto.link);
+      });
+    });
 
-    describe('Edit bookmark by id', () => {});
+    describe('Get bookmarks', () => {
+      it('should get bookmarks', () => {
+        return pactum
+          .spec()
+          .get('/bookmarks')
+          .withHeaders({ Authorization: 'Bearer $S{userAccessToken}' })
+          .expectStatus(200)
+          .expectJsonLength(1);
+      });
+    });
 
-    describe('Delete bookmark by id', () => {});
+    describe('Get bookmarks by id', () => {
+      it('should get bookmark by id', () => {
+        return pactum
+          .spec()
+          .get('/bookmarks/{id}')
+          .withPathParams('id', '$S{bookmarkId}')
+          .withHeaders({ Authorization: 'Bearer $S{userAccessToken}' })
+          .expectStatus(200)
+          .expectBodyContains('$S{bookmarkId}');
+      });
+    });
+
+    describe('Edit bookmark by id', () => {
+      it('should edit bookmark by id', () => {
+        const dto = {
+          title: 'First Bookmark Edited',
+          description: 'First Bookmark Edited',
+        };
+
+        return pactum
+          .spec()
+          .patch('/bookmarks/{id}')
+          .withPathParams('id', '$S{bookmarkId}')
+          .withHeaders({ Authorization: 'Bearer $S{userAccessToken}' })
+          .withBody(dto)
+          .expectStatus(200)
+          .expectBodyContains(dto.title)
+          .expectBodyContains(dto.description);
+      });
+    });
+
+    describe('Delete bookmark by id', () => {
+      it('should delete bookmark by id', () => {
+        return pactum
+          .spec()
+          .delete('/bookmarks/{id}')
+          .withPathParams('id', '$S{bookmarkId}')
+          .withHeaders({ Authorization: 'Bearer $S{userAccessToken}' })
+          .expectStatus(204);
+      });
+
+      it('should get empty bookmarks', () => {
+        return pactum
+          .spec()
+          .get('/bookmarks')
+          .withHeaders({ Authorization: 'Bearer $S{userAccessToken}' })
+          .expectStatus(200)
+          .expectBody([]);
+      });
+    });
   });
 });
