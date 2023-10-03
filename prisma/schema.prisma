@@ -40,3 +40,11 @@ model Bookmark {
 
   @@map("bookmarks")
 }
+
+// model Session {
+//   sid 
+//   sess Json
+//   expire DateTime
+
+//   @@map("sessions")
+// }
