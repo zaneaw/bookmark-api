@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Patch } from '@nestjs/common';
+import { Body, Controller, Get, Patch, Session } from '@nestjs/common';
 import { User } from '@prisma/client';
 // import * as secureSession from '@fastify/secure-session';
 // import { AuthService } from '../auth/auth.service';
@@ -14,8 +14,9 @@ export class UserController {
 
   //, @Session() session: secureSession.Session
   @Get('me')
-  getMe(@GetUser() user: User) {
+  getMe(@GetUser() user: User, @Session() session: Record<string, any>) {
     // this.authService.checkSession(session);
+    console.log('SESSION!@$!#@%@#!%$!#@%^!%^:\n', session);
     return user;
   }
 

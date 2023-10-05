@@ -41,10 +41,11 @@ model Bookmark {
   @@map("bookmarks")
 }
 
-// model Session {
-//   sid 
-//   sess Json
-//   expire DateTime
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String
+  expiresAt DateTime
 
-//   @@map("sessions")
-// }
+  @@map("sessions")
+}

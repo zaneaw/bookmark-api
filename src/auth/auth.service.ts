@@ -16,7 +16,7 @@ export class AuthService {
   ) {}
 
   // session: secureSession.Session,
-  async signup(dto: AuthDto) {
+  async signup(dto: AuthDto, session: Record<string, any>) {
     // generate password hash
     const hash = await argon.hash(dto.password);
 
@@ -38,7 +38,7 @@ export class AuthService {
         throw error;
       });
 
-    return this.createSession(user.id, user.email);
+    return this.createSession(user.id, user.email, session);
   }
 
   // session: secureSession.Session
@@ -86,10 +86,8 @@ export class AuthService {
   }
 
   // , session: secureSession.Session
-  createSession(userId: number, email: string) {
-    // session.set('user', { userId, email });
-
-    console.log(userId, email);
+  createSession(userId: number, email: string, session?: Record<string, any>) {
+    session.user = { userId, email };
   }
 
   // function to check if users Cookie session is valid

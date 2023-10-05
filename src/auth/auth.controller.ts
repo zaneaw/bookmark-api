@@ -4,7 +4,7 @@ import {
   Body,
   HttpCode,
   HttpStatus,
-  // Session,
+  Session,
 } from '@nestjs/common';
 // import * as secureSession from '@fastify/secure-session';
 import { AuthService } from './auth.service';
@@ -17,8 +17,8 @@ export class AuthController {
   //@Session() session: secureSession.Session,
   // POST /signup
   @Post('signup')
-  signup(@Body() dto: AuthDto) {
-    return this.authService.signup(dto);
+  signup(@Body() dto: AuthDto, @Session() session: Record<string, any>) {
+    return this.authService.signup(dto, session);
   }
 
   // @Session() session: secureSession.Session,
