@@ -2,9 +2,10 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import * as argon from 'argon2';
+// import * as secureSession from '@fastify/secure-session';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuthDto } from './dto';
-import * as argon from 'argon2';
 
 @Injectable()
 export class AuthService {
@@ -14,6 +15,7 @@ export class AuthService {
     private config: ConfigService,
   ) {}
 
+  // session: secureSession.Session,
   async signup(dto: AuthDto) {
     // generate password hash
     const hash = await argon.hash(dto.password);
@@ -36,9 +38,10 @@ export class AuthService {
         throw error;
       });
 
-    return this.signToken(user.id, user.email);
+    return this.createSession(user.id, user.email);
   }
 
+  // session: secureSession.Session
   async signin(dto: AuthDto) {
     // find user by email
     const user = await this.prisma.user.findUnique({
@@ -56,26 +59,42 @@ export class AuthService {
     // if password doesn't match, throw error
     if (!pwMatches) throw new ForbiddenException('Credentials are invalid');
 
-    // send back JWT
-    return this.signToken(user.id, user.email);
+    // send back session cookie
+    return this.createSession(user.id, user.email);
+  }
+
+  // session: secureSession.Session
+  signout() {
+    // session.delete();
+
+    return;
   }
 
   async signToken(
     userId: number,
     email: string,
-  ): Promise<{ access_token: string }> {
-    const payload = {
-      sub: userId,
-      email,
-    };
+    // session?: secureSession.Session,
+  ): Promise<any> {
+    // session.set('user', { userId, email });
 
-    const token = await this.jwt.signAsync(payload, {
-      expiresIn: '15m',
-      secret: this.config.get('JWT_SECRET'),
-    });
+    // const sessionAge = 60 * 60 * 24 * 30; // 30 days
+    // session.options({ maxAge: 15000 });
 
-    return {
-      access_token: token,
-    };
+    console.log(userId, email);
+
+    return;
+  }
+
+  // , session: secureSession.Session
+  createSession(userId: number, email: string) {
+    // session.set('user', { userId, email });
+
+    console.log(userId, email);
+  }
+
+  // function to check if users Cookie session is valid
+  // session: secureSession.Session
+  async checkSession() {
+    console.log('!@$@#^@#$&@%^&$!@#%!@#%!$@#%SESSION!@$@#^%@^%!@^!$');
   }
 }
