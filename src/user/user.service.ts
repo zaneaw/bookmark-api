@@ -18,4 +18,13 @@ export class UserService {
 
     return currUser;
   }
+
+  // TODO - add error handling?
+  async findUserById(userId: number) {
+    return this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+  }
 }

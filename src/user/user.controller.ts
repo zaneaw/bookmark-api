@@ -16,7 +16,14 @@ export class UserController {
   @Get('me')
   getMe(@GetUser() user: User, @Session() session: Record<string, any>) {
     // this.authService.checkSession(session);
-    console.log('SESSION!@$!#@%@#!%$!#@%^!%^:\n', session);
+    console.log(
+      'SESSION!@$!#@%@#!%$!#@%^!%^:\n',
+      session,
+      '\n',
+      session.id,
+      '\n',
+      session.cookie.expires,
+    );
     return user;
   }
 

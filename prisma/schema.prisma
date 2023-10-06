@@ -42,10 +42,12 @@ model Bookmark {
 }
 
 model Session {
-  id        String   @id
-  sid       String   @unique
-  data      String
+  cId       String   @id // id of cookie on the client
+  sid       String   @unique // id of session on the server
   expiresAt DateTime
+
+  data    String
+  isValid Boolean @default(true)
 
   @@map("sessions")
 }
